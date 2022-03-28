@@ -1,0 +1,114 @@
+char *uidmembers[]{
+    " 83 9E E0 54 ", // MD 83 9E E0 54
+    " 83 A8 91 06 ", // MR 83 A8 91 06
+    " 00 44 11 5C ", // MJ 00 44 11 5C
+    " 39 48 62 28 ", // MN 39 48 62 28
+    " F3 E0 D2 54 ", // aylin F3 E0 D2 54
+    " EC CB 43 2E ", // alice EC CB 43 2E
+    " 03 6E E8 54 ", // clara 03 6E E8 54
+    " 73 3F E0 54 ", // daniel 73 3F E0 54
+    " 63 A5 E0 54 ", // henry 63 A5 E0 54
+    " E3 C4 E7 54 ", // ich E3 C4 E7 54
+    " A3 60 C2 54 ", // j A3 60 C2 54
+    " 23 A9 DA 54 ", // mail 23 A9 DA 54
+    " EB 9C 85 1F ", // wax EB 9C 85 1F
+    " 0C FD 0D 2C ", // nathanos 0C FD 0D 2C
+    " 33 AC D6 54 ", // noahn 33 AC D6 54
+    " F3 D6 BC 54 ", // woojin F3 D6 BC 54
+    " 6C 6D 1F 2C ", // ronaldo 6C 6D 1F 2C
+    " 23 CD D3 54 ", // sofia 23 CD D3 54
+    " 63 6E E8 54 ", // yuine 63 6E E8 54
+    //
+    " 3C DC 1A 2C ",  // david 3C DC 1A 2C
+    " 4C 11 2C 2F ",  // caleb 4C 11 2C 2F
+    " A7 47 B9 D6 ",  // elena A7 47 B9 D6
+    " EC 60 17 2C ",  // emily EC 60 17 2C
+    " CA CB D7 3F ",  // joshua CA CB D7 3F
+    " AC 78 5F 49 ",  // rebecca AC 78 5F 49
+    " 8C 10 50 2F ",  // richard 8C 10 50 2F
+    " 5C 6F 10 2C ",  // edward 5C 6F 10 2C
+    " 07 3E A2 D6 ",  // sarah 07 3E A2 D6
+    " 7C 9C 1D 2C ",  // youn 7C 9C 1D 2C
+    " 5C 32 12 2C ",  // yujin 5C 32 12 2C
+    " FC C8 38 2F "}; // chris_p_bacon FC C8 38 2F
+// 예비용 1C 3A 00 2F ,3C FB 55 2E
+
+char *namemembers[]{
+    "MD",            // 83 9E E0 54
+    "MR",            // 83 A8 91 06
+    "MJ",            // 00 44 11 5C
+    "MN",            // 39 48 62 28
+    "aylinux",       // F3 E0 D2 54
+    "alicebon",      // EC CB 43 2E
+    "claraland",     // 03 6E E8 54
+    "daniel",        // 73 3F E0 54
+    "henry8se",      // 63 A5 E0 54
+    "ich",           // E3 C4 E7 54
+    "j",             // A3 60 C2 54
+    "mail",          // 23 A9 DA 54
+    "wax",           // EB 9C 85 1F
+    "nathanos",      // 0C FD 0D 2C
+    "noahn",         // 33 AC D6 54
+    "woojinsagalbi", // F3 D6 BC 54
+    "ronaldo",       // 6C 6D 1F 2C
+    "sofia",         // 23 CD D3 54
+    "yuinejammin",   // 63 6E E8 54
+
+    "davidoo",        // 3C DC 1A 2C
+    "caleb",          // 4C 11 2C 2F
+    "elena",          // A7 47 B9 D6
+    "emily",          // EC 60 17 2C
+    "joshua",         // CA CB D7 3F
+    "rebeccarcenter", // AC 78 5F 49
+    "richard",        // 8C 10 50 2F
+    "edward",         // 5C 6F 10 2C
+    "sarahrarang",    // 07 3E A2 D6
+    "youn",           // 7C 9C 1D 2C
+    "yujin",          // 5C 32 12 2C
+    "chris_p_bacon"}; // FC C8 38 2F
+
+#include <Servo.h>
+#include <SPI.h>
+#include <MFRC522.h>
+#define SS 10          // spi 통신을 위한 SS(chip select)핀 설정
+#define RST 9          // 리셋 핀 설정
+MFRC522 rfid(SS, RST); // rfid이름으로 mfrc522 객체생성
+
+String save_people = ""; //학생,코치 이름 저장할 변수
+void setup()
+{
+    Serial.begin(9600);
+    SPI.begin();
+
+    rfid.PCD_Init();
+}
+void loop(){
+    if (!rfid.PICC_IsNewCardPresent() || rfid.PICC_ReadCardSerial())
+    {
+        delay(300);
+        return;
+    }
+
+
+    String current_uid = "";
+    byte letter;
+    int i = 0;
+    for (byte i = 0; i < rfid.uid.size; i++)
+    {
+        Serial.print(rfid.uid.uidByte[i] < 0x10 ? " 0" : " ");
+        Serial.print(rfid.uid.uidByte[i], HEX);
+        current_uid.concat(String(rfid.uid.uidByte[i], HEX));
+        current_uid.concat(String(rfid.uid.uidByte[i] < 0x10 ? " 0" : " "));
+        Serial.println(current_uid);
+         }
+        // int i = 0;
+        // while (uidmembers[i] == current_uid)
+        // {
+        //     i++ Serial.println(namemembers[i]);
+        //     save_people = namemembers[i];
+        // }
+    
+
+}
+//선생님이 제 화면을 보시려고 하는걸 알기 위해 이렇게 했는데 허용 무조건 해드릴게요
+//- 나단

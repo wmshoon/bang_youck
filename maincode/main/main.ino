@@ -36,12 +36,12 @@
 
 #define _chris_p_bacon "FC C8 38 2F"
 
-#include <SPI.h>asdA
+#include <SPI.h>
 #include <MFRC522.>
 
-#define SS 10              // spi 통신을 위한 SS(chip select)핀 설정
-#define RST 9              // 리셋 핀 설정
-    MFRC522 rfid(SS, RST); // rfid이름으로 mfrc522 객체생성
+#define SS 10          // spi 통신을 위한 SS(chip select)핀 설정
+#define RST 9          // 리셋 핀 설정
+MFRC522 rfid(SS, RST); // rfid이름으로 mfrc522 객체생성
 
 void setup()
 {
@@ -54,16 +54,10 @@ void setup()
 void loop()
 {
   // 새카드 접촉이 있을 때만 다음 단계로 넘어감
-  if (!rfid.PICC_IsNewCardPresent())
+  if (!rfid.PICC_IsNewCardPresent() || !!rfid.PICC_ReadCardSerial())
   {
     return;
   }
-  // 카드 읽힘이 제대로 되면 다음으로 넘어감
-  if (!rfid.PICC_ReadCardSerial())
-  {
-    return;
-  }
-  // UID 값을 16진값으로 읽고 저장한 후 시리얼 모니터로 표시함
 
   Serial.print("UID tag :");
   String content = "";
@@ -252,11 +246,11 @@ void loop()
     delay(3000); // 카드 접촉 및 연속체크 시간에 대한 딜레이 주기
   }
   else if (content.substring(1) == _youn)
-    {
-      Serial.println("Authorized access. Welcome coach youn!");
-      Serial.println();
-      delay(3000); // 카드 접촉 및 연속체크 시간에 대한 딜레이 주기
-    }
+  {
+    Serial.println("Authorized access. Welcome coach youn!");
+    Serial.println();
+    delay(3000); // 카드 접촉 및 연속체크 시간에 대한 딜레이 주기
+  }
   else if (content.substring(1) == _yujin)
   {
     Serial.println("Authorized access. Welcome coach yujin!");
