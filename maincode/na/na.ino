@@ -8,7 +8,7 @@
 #define buzzerPin 5
 
 char *UIDmembers[]{
-    " 83 9E E0 54",  // MD 83 9E E0 54
+    "83 9E E0 54",   // MD 83 9E E0 54
     " 83 A8 91 06",  // MR 83 A8 91 06
     " 00 44 11 5C",  // MJ 00 44 11 5C
     " 39 48 62 28",  // MN 39 48 62 28
@@ -26,7 +26,7 @@ char *UIDmembers[]{
     " F3 D6 BC 54",  // woojin F3 D6 BC 54
     " 6C 6D 1F 2C",  // ronaldo 6C 6D 1F 2C
     " 23 CD D3 54",  // sofia 23 CD D3 54
-    " 63 6E E8 54",  // yuine 63 6E E8 54
+    " 63 FC BE 54",  // yuine 63 6E E8 54
     " 3C DC 1A 2C",  // david 3C DC 1A 2C
     " 4C 11 2C 2F",  // caleb 4C 11 2C 2F
     " A7 47 B9 D6",  // elena A7 47 B9 D6
@@ -111,7 +111,6 @@ void loop()
   // for (int count = 0; !current_uid.substring(1) == UIDmembers[count]; count++) {
   for (int i = 0; i < 31; i++)
   {
-    Serial.println("HELLO");
     if (current_uid == UIDmembers[i])
     {
       Serial.print(UIDmembers[i]);
@@ -140,12 +139,12 @@ void hello(int a, int b) // a : name, b: am,pm 0 = am, 1, = pm
   Serial.print("hello ");
   if (b == 0)
   {
-    Serial.print(a);
+    Serial.print(NAMEmembers[a]);
     Serial.println("! good morning");
   }
   if (b == 1)
   {
-    Serial.print(a);
+    Serial.print(NAMEmembers[a]);
     Serial.println("! good afternoon!");
   }
 }
