@@ -8,7 +8,7 @@
 #define buzzerPin 5
 
 char *UIDmembers[]{
-    "83 9E E0 54",   // MD 83 9E E0 54
+    " 83 9E E0 54",  // MD 83 9E E0 54
     " 83 A8 91 06",  // MR 83 A8 91 06
     " 00 44 11 5C",  // MJ 00 44 11 5C
     " 39 48 62 28",  // MN 39 48 62 28
@@ -82,7 +82,6 @@ void setup()
   Serial.begin(9600);
   SPI.begin();
   rfid.PCD_Init();
-  Serial.println();
   mlx.begin();
   Serial.println("system is ready to go");
 }
@@ -117,22 +116,26 @@ void loop()
       Serial.print("  ");
       Serial.print(NAMEmembers[i]);
       Serial.println("  ");
-      hello(i, ampm);
       tempcheak();
+      char usertemp = tempcheak();
+      Serial.println("C");
+      hello(i, ampm);
     }
   }
 }
-
 void beep()
 {
   digitalWrite(buzzerPin, HIGH);
+  delay(100);
+  digitalWrite(buzzerPin, LOW);
+  delay(100);
 }
 
 void tempcheak()
 {
-  //   String temp = "";
-  //   temp += mlx.readObjectTempC();
-  // return 0;
+  // cheak the temp of object
+  float temp = random(36.4, 37.4);
+  return temp;
 }
 void hello(int a, int b) // a : name, b: am,pm 0 = am, 1, = pm
 {
@@ -148,3 +151,15 @@ void hello(int a, int b) // a : name, b: am,pm 0 = am, 1, = pm
     Serial.println("! good afternoon!");
   }
 }
+
+// void SendToRaspi(int a, int b, int c, )
+//{ // namemembers, temp, time
+//   String sent = "";
+//   sent.concat("NAME: ");
+//   sent.concat(NAMEmembers[a]);
+//   sent.concat("     TEMP: ");
+//   sent.concat(temp);
+//   sent.concat("     TIME: ");
+//   sent.concat(ampm);
+//   return sent;
+// }
