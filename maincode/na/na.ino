@@ -72,6 +72,27 @@ char *NAMEmembers[]{
     "yujin",          // 5C 32 12 2C
     "chris_p_bacon"}; // FC C8 38 2F ##========== 0 to 30 ==========#
 
+char *hello_message_all[]{
+
+    "hello",
+    "hi",
+    "good to see you",
+    "glad to see you",
+    "welcome",
+    "welcome back",
+    "nice to see you"};
+char *hello_message_goodbye_late[]{
+
+    "see you later",
+    "good bye",
+    "i am working... and u are going",
+    "bye",
+    "have a good night"};
+char *hello_message_goodbye_early[]{
+    "see you later",
+    "good bye",
+    "i am working... and u are going",
+    "bye"};
 int ampm = 0; // 0 am, 1 pm
 
 MFRC522 rfid(SS, RST);
@@ -130,13 +151,13 @@ void beep()
   digitalWrite(buzzerPin, LOW);
   delay(100);
 }
-
 void tempcheak()
 {
   // cheak the temp of object
   float temp = random(36.4, 37.4);
   return temp;
 }
+
 void hello(int a, int b) // a : name, b: am,pm 0 = am, 1, = pm
 {
   Serial.print("hello ");
