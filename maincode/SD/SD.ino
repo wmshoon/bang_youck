@@ -1,4 +1,4 @@
-#define NATHANOS cutty
+#include <.h>
 #include <SPI.h>
 #include <SD.h>
 char d;
@@ -62,4 +62,5 @@ void loop()
 }
 void filecheak()
 {
+    SD.begin();
 }

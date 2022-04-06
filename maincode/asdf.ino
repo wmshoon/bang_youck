@@ -1,0 +1,197 @@
+#include <EEPROM.h>
+#include <SPI.h>
+#include <MFRC522.h>
+#include <Adafruit_MLX90614.h>
+#include <SD.h>
+
+File myFile;
+
+#define SS 10
+#define RST 9
+#define buzzerPin 5
+
+char d;
+char *UIDmembers[]{
+    " 83 9E E0 54",  // MD 83 9E E0 54
+    " 83 A8 91 06",  // MR 83 A8 91 06
+    " 00 44 11 5C",  // MJ 00 44 11 5C
+    " 39 48 62 28",  // MN 39 48 62 28
+    " F3 E0 D2 54",  // aylin F3 E0 D2 54
+    " EC CB 43 2E",  // alice EC CB 43 2E
+    " 03 6E E8 54",  // clara 03 6E E8 54
+    " 73 3F E0 54",  // daniel 73 3F E0 54
+    " 63 A5 E0 54",  // henry 63 A5 E0 54
+    " E3 C4 E7 54",  // ich E3 C4 E7 54
+    " A3 60 C2 54",  // j A3 60 C2 54
+    " 23 A9 DA 54",  // mail 23 A9 DA 54
+    " EB 9C 85 1F",  // wax EB 9C 85 1F
+    " 0C FD 0D 2C",  // nathanos 0C FD 0D 2C
+    " 33 AC D6 54",  // noahn 33 AC D6 54
+    " F3 D6 BC 54",  // woojin F3 D6 BC 54
+    " 6C 6D 1F 2C",  // ronaldo 6C 6D 1F 2C
+    " 23 CD D3 54",  // sofia 23 CD D3 54
+    " 63 FC BE 54",  // yuine 63 6E E8 54
+    " 3C DC 1A 2C",  // david 3C DC 1A 2C
+    " 4C 11 2C 2F",  // caleb 4C 11 2C 2F
+    " A7 47 B9 D6",  // elena A7 47 B9 D6
+    " EC 60 17 2C",  // emily EC 60 17 2C
+    " CA CB D7 3F",  // joshua CA CB D7 3F
+    " AC 78 5F 49",  // rebecca AC 78 5F 49
+    " 8C 10 50 2F",  // richard 8C 10 50 2F
+    " 5C 6F 10 2C",  // edward 5C 6F 10 2C
+    " 07 3E A2 D6",  // sarah 07 3E A2 D6
+    " 7C 9C 1D 2C",  // youn 7C 9C 1D 2C
+    " 5C 32 12 2C",  // yujin 5C 32 12 2C
+    " FC C8 38 2F"}; // chris_p_bacon FC C8 38 2F
+char *NAMEmembers[]{
+    "MD",             // 83 9E E0 54
+    "MR",             // 83 A8 91 06
+    "MJ",             // 00 44 11 5C
+    "MN",             // 39 48 62 28
+    "aylinux",        // F3 E0 D2 54
+    "alicebon",       // EC CB 43 2E
+    "claraland",      // 03 6E E8 54
+    "daniel",         // 73 3F E0 54
+    "henry8se",       // 63 A5 E0 54
+    "ich",            // E3 C4 E7 54
+    "j",              // A3 60 C2 54
+    "mail",           // 23 A9 DA 54
+    "wax",            // EB 9C 85 1F
+    "nathanos",       // 0C FD 0D 2C
+    "noahn",          // 33 AC D6 54
+    "woojinsagalbi",  // F3 D6 BC 54
+    "ronaldo",        // 6C 6D 1F 2C
+    "sofia",          // 23 CD D3 54
+    "yuinejammin",    // 63 6E E8 54
+    "davidoo",        // 3C DC 1A 2C
+    "caleb",          // 4C 11 2C 2F
+    "elena",          // A7 47 B9 D6
+    "emily",          // EC 60 17 2C
+    "joshua",         // CA CB D7 3F
+    "rebeccarcenter", // AC 78 5F 49
+    "richard",        // 8C 10 50 2F
+    "edward",         // 5C 6F 10 2C
+    "sarahrarang",    // 07 3E A2 D6
+    "youn",           // 7C 9C 1D 2C
+    "yujin",          // 5C 32 12 2C
+    "chris_p_bacon"}; // FC C8 38 2F ##========== 0 to 30 ==========#
+char *hello_message_all[]{
+    "hello",
+    "hi",
+    "good to see you",
+    "glad to see you",
+    "welcome",
+    "welcome back",
+    "nice to see you",
+    "nice to meet you",
+    "have a good day",
+    "wassup"};
+char *hello_message_goodbye_late[]{
+    "see you next time",
+    "bye bye",
+    "see you tomorrow",
+    "see you later",
+    "good bye",
+    "i am working... and u are going",
+    "bye",
+    "have a good night",
+    "Adios",
+    "Remember me and goodbye",
+    "I miss you"};
+char *hello_message_goodbye_early[]{
+    "see you later",
+    "good bye",
+    "i am working... and u are going",
+    "bye",
+    "Adios",
+    "Remember me and goodbye",
+    "Bye buddy"};
+int ampm = 0; // 0 am, 1 pm
+
+MFRC522 rfid(SS, RST);
+Adafruit_MLX90614 mlx = Adafruit_MLX90614();
+
+void setup()
+{
+start:
+    Serial.begin(9600);
+    Serial.println("Serial has been started");
+    SPI.begin();
+    Serial.println("SPI has been started");
+    rfid.PCD_Init();
+    Serial.println("rfid.PCD_Init has been started");
+    mlx.begin();
+    Serial.print("mlx.begin has been started");
+    Serial.println("system is ready to go");
+    Serial.print("Initializing SD card...");
+    if (!SD.begin(4))
+    {                                             // SD카드 모듈을 초기화합니다.
+        Serial.println("initialization failed!"); // SD카드 모듈 초기화에 실패하면 에러를 출력합니다.
+        delay(1000);                              // wait
+        goto start;
+    }
+}
+
+void loop() float a = 0;
+{
+    if (!rfid.PICC_IsNewCardPresent())
+    {
+        return;
+    }
+    if (!rfid.PICC_ReadCardSerial())
+    {
+        return;
+    }
+    String current_uid = "";
+    byte letter;
+    for (byte i = 0; i < rfid.uid.size; i++)
+    {
+        current_uid.concat(String(rfid.uid.uidByte[i] < 0x10 ? " 0" : " "));
+        current_uid.concat(String(rfid.uid.uidByte[i], HEX));
+    }
+
+    current_uid.toUpperCase();
+
+    // for (int count = 0; !current_uid.substring(1) == UIDmembers[count]; count++) {
+    for (int i = 0; i < 31; i++)
+    {
+        if (current_uid == UIDmembers[i])
+        {
+            Serial.print(UIDmembers[i]);
+            Serial.print("  ");
+            Serial.print(NAMEmembers[i]);
+            Serial.println("  ");
+            a = tempcheak();
+            Serial.print(a);
+            Serial.println("C");
+            hello(i, ampm);
+        }
+    }
+}
+void beep()
+{
+
+    digitalWrite(buzzerPin, HIGH);
+    delay(100);
+    digitalWrite(buzzerPin, LOW);
+    delay(100);
+}
+float tempcheak()
+{
+    // cheak the temp of object
+    float temp = random(36.4, 37.4);
+    return temp;
+}
+
+char lcdprint(char x)
+{
+}
+
+void equals(int a) // prints the = amount of a
+{
+
+    for (int i = 0; a < a; i++)
+    {
+        Serial.print("=");
+    }
+}
