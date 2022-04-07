@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "*.ino": "c",
+    "*.ccp": "c"
+  }
+}

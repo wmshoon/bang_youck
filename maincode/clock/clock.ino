@@ -31,7 +31,7 @@ void setup()
 
     if (now < compiled)
     {
-        Serial.println("RTC is older than compile time!  (Updating DateTime)");
+        Serial.println("RTC is older than compile time! (Updating DateTime)");
         Rtc.SetDateTime(compiled);
     }
     else if (now > compiled)

@@ -2,6 +2,7 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Adafruit_MLX90614.h>
+#include <WmsMembers.h>
 
 #define SS 10
 #define RST 9
@@ -174,7 +175,7 @@ void hello(int a, int b) // a : name, b: am,pm 0 = am, 1, = pm
 }
 
 // void SendToRaspi(int a, int b, int c, )
-//{ // namemembers, temp, time
+// { // namemembers, temp, time
 //   String sent = "";
 //   sent.concat("NAME: ");
 //   sent.concat(NAMEmembers[a]);
