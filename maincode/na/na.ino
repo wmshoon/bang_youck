@@ -129,7 +129,6 @@ void loop()
 
   current_uid.toUpperCase();
 
-  // for (int count = 0; !current_uid.substring(1) == UIDmembers[count]; count++) {
   for (int i = 0; i < 31; i++)
   {
     if (current_uid == UIDmembers[i])
@@ -138,8 +137,6 @@ void loop()
       Serial.print("  ");
       Serial.print(NAMEmembers[i]);
       Serial.println("  ");
-      tempcheak();
-      char usertemp = tempcheak();
       Serial.println("C");
       hello(i, ampm);
     }

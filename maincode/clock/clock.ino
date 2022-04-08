@@ -1,88 +1,36 @@
-#include <ThreeWire.h>
-#include <RtcDS1302.h>
-ThreeWire myWire(4, 5, 2); // IO, SCLK, CE
-
-RtcDS1302<ThreeWire> Rtc(myWire);
+#include <RTClib.h> // RTC 기본 라이브러리
+#include <Wire.h>   // i2c 통신 라이브러리
+RTC_DS1307 RTC;     // RTC클래스 생성
 
 void setup()
 {
     Serial.begin(9600);
-    Serial.print("compiled: ");
-    Serial.print(__DATE__);
-    Serial.println(__TIME__);
-    Rtc.Begin();
-    RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-    printDateTime(compiled);
-    Serial.println();
-
-    if (Rtc.GetIsWriteProtected())
-    {
-        Serial.println("RTC was write protected, enabling writing now");
-        Rtc.SetIsWriteProtected(false);
-    }
-
-    if (!Rtc.GetIsRunning())
-    {
-        Serial.println("RTC was not actively running, starting now");
-        Rtc.SetIsRunning(true);
-    }
-
-    RtcDateTime now = Rtc.GetDateTime();
-
-    if (now < compiled)
-    {
-        Serial.println("RTC is older than compile time! (Updating DateTime)");
-        Rtc.SetDateTime(compiled);
-    }
-    else if (now > compiled)
-    {
-        Serial.println("RTC is newer than compile time. (this is expected)");
-    }
-    else if (now == compiled)
-    {
-        Serial.println("RTC is the same as compile time! (not expected but all is fine)");
-    }
+    Wire.begin();
+    RTC.begin();
+    RTC.adjust(DateTime(__DATE__, __TIME__));
+    nowtime();
 }
 
 void loop()
 {
-    RtcDateTime now = Rtc.GetDateTime();
-    printDateTime(now);
-    Serial.println();
-    delay(1000);
+    Serial.println(ReturnTime());
 }
 
-#define countof(a) (sizeof(a) / sizeof(a[0]))
-
-//시리얼 모니터에 날짜 시간 표시하는 함수
-void printDateTime(const RtcDateTime &dt)
+String ReturnTime()
 {
-    char datestring[20];
-
-    snprintf_P(datestring,
-               countof(datestring),
-               PSTR("%02u/%02u/%04u %02u:%02u:%02u"),
-               dt.Month(),
-               dt.Day(),
-               dt.Year(),
-               dt.Hour(),
-               dt.Minute(),
-               dt.Second());
-    Serial.print(datestring);
-}
-
-void returnDateTime(const RtcDateTime &dt)
-{
-    char datestring[20];
-
-    snprintf_P(datestring,
-               countof(datestring),
-               PSTR("%02u/%02u/%04u %02u:%02u:%02u"),
-               dt.Month(),
-               dt.Day(),
-               dt.Year(),
-               dt.Hour(),
-               dt.Minute(),
-               dt.Second());
-    return datestring;
+    String Now = "";
+    DateTime now = RTC.now();
+    Now.concat("year:");
+    Now.concat(now.year());
+    Now.concat(" month:");
+    Now.concat(now.month());
+    Now.concat(" day:");
+    Now.concat(now.day());
+    Now.concat(" hour:");
+    Now.concat(now.hour());
+    Now.concat(" minute:");
+    Now.concat(now.minute());
+    Now.concat(" second:");
+    Now.concat(now.second());
+    return (Now);
 }

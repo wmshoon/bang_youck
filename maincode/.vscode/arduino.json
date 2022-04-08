@@ -1,6 +1,6 @@
 {
-    "port": "/dev/tty.usbmodem101",
+    "port": "/dev/tty.usbmodem11201",
     "board": "arduino:avr:uno",
     "programmer": "arduino:avrisp",
-    "sketch": "na/na.ino"
+    "sketch": "SD/SD.ino"
 }
