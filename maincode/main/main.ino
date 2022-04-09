@@ -5,13 +5,11 @@
 #include <Adafruit_MLX90614.h>
 #include <RTClib.h> // RTC 기본 라이브러리
 #include <Wire.h>   // i2c 통신 라이브러리
-
 File myFile;
 RTC_DS1307 RTC; // RTC클래스 생성
 #define SS 10
 #define RST 9
 #define buzzerPin 5
-
 char *UIDmembers[]{
     " 83 9E E0 54",  // MD 83 9E E0 54
     " 83 A8 91 06",  // MR 83 A8 91 06
@@ -76,7 +74,6 @@ char *NAMEmembers[]{
     "youn",           // 7C 9C 1D 2C
     "yujin",          // 5C 32 12 2C
     "chris_p_bacon"}; // FC C8 38 2F ##========== 0 to 30 ==========#
-
 char *hello_message_all[]{
 
     "hello",
@@ -190,7 +187,6 @@ void hello(int a, int b) // a : name, b: am,pm 0 = am, 1, = pm
   }
 }
 
-// SD카드 셋업
 void setup()
 {
   myFile = SD.open("test.txt", FILE_WRITE);
