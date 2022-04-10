@@ -5,11 +5,13 @@
 #include <Adafruit_MLX90614.h>
 #include <RTClib.h> // RTC 기본 라이브러리
 #include <Wire.h>   // i2c 통신 라이브러리
+
 File myFile;
 RTC_DS1307 RTC; // RTC클래스 생성
 #define SS 10
 #define RST 9
-#define buzzerPin 5
+#define buzzerPin undefined
+#define LedPin undefined
 char *UIDmembers[]{
     " 83 9E E0 54",  // MD 83 9E E0 54
     " 83 A8 91 06",  // MR 83 A8 91 06
@@ -75,7 +77,6 @@ char *NAMEmembers[]{
     "yujin",          // 5C 32 12 2C
     "chris_p_bacon"}; // FC C8 38 2F ##========== 0 to 30 ==========#
 char *hello_message_all[]{
-
     "hello",
     "hi",
     "good to see you",
@@ -84,7 +85,6 @@ char *hello_message_all[]{
     "welcome back",
     "nice to see you"};
 char *hello_message_goodbye_late[]{
-
     "see you later",
     "good bye",
     "i am working... and u are going",
@@ -96,12 +96,13 @@ char *hello_message_goodbye_early[]{
     "i am working... and u are going",
     "bye"};
 int ampm = 0; // 0 am, 1 pm
-
+float temp;   // temp
 MFRC522 rfid(SS, RST);
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();
 
 void setup()
-{ // Open serial communications and wait for port to open:
+{
+  buzzerBeep(1);
   pinMode(10, OUTPUT);
   if (!SD.begin(4))
   {
@@ -117,10 +118,19 @@ void setup()
   rfid.PCD_Init();
   mlx.begin();
   Serial.println("system is ready to go");
+  buzzerBeep(2);
 }
 
 void loop()
 {
+  if (getPmOrAm == "PM") // use RTC.
+  {
+    ampm = 1;
+  }
+  if (getPmOrAm = "AM") // Use RTC.
+  {
+    ampm = 0;
+  }
   if (!rfid.PICC_IsNewCardPresent())
   {
     return;
@@ -129,90 +139,121 @@ void loop()
   {
     return;
   }
-
+  buzzerBeep(2);
   String current_uid = "";
   byte letter;
+
   for (byte i = 0; i < rfid.uid.size; i++)
   {
     current_uid.concat(String(rfid.uid.uidByte[i] < 0x10 ? " 0" : " "));
     current_uid.concat(String(rfid.uid.uidByte[i], HEX));
   }
-
   current_uid.toUpperCase();
-
   for (int i = 0; i < 31; i++)
   {
     if (current_uid == UIDmembers[i])
     {
-      Serial.print(UIDmembers[i]);
-      Serial.print("  ");
-      Serial.print(NAMEmembers[i]);
-      Serial.println("  ");
-      Serial.println("C");
-      hello(i, ampm);
+      serialPrintCurrent(i); // i equals current_members number
+      float temp = getTemp();
+      WriteToSDcard(i, temp);
+      // Serial.print(UIDmembers[i]);
+      // Serial.print("  ");
+      // Serial.print(NAMEmembers[i]);
+      // Serial.println("  ");
+      // Serial.println("C");
+      // hello(i, ampm);
     }
   }
 }
-void beep()
+
+void buzzerBeep(int count)
 {
-  digitalWrite(buzzerPin, HIGH);
-  delay(100);
-  digitalWrite(buzzerPin, LOW);
-  delay(100);
+  for (int i = 0; i < count; i++)
+  {
+    digitalWrite(buzzerPin, HIGH);
+    delay(100);
+    digitalWrite(buzzerPin, LOW);
+    delay(100);
+  }
 }
-void tempcheak()
+void getTemp()
 {
   // cheak the temp of object
   float temp = random(36.4, 37.4);
   return temp;
 }
-
-void hello(int a, int b) // a : name, b: am,pm 0 = am, 1, = pm
+void blink(int count)
 {
-  Serial.print("hello ");
-  if (b == 0)
+  for (int i = 0; i < count; i++)
   {
-    Serial.print(NAMEmembers[a]);
-    Serial.println("! good morning");
-  }
-  if (b == 1)
-  {
-    Serial.print(NAMEmembers[a]);
-    Serial.println("! good afternoon!");
-  }
-  else
-  {
-    Serial.print(NAMEmembers[a]);
-    Serial.println("! good too see u!");
+    delay(100);
+    digitalWrite(LedPin, HIGH);
+    delay(100);
+    digitalWrite(LedPin, LOW);
   }
 }
 
-void setup()
+void serialPrintCurrent(int i)
 {
-  myFile = SD.open("test.txt", FILE_WRITE);
+  if (ampm == 0)
+  {
+    Serial.print(hello_message_goodbye_early[random(0, 3)]);
+  }
+  if (ampm == 1)
+  {
+    Serial.print(hello_message_goodbye_late[random(0, 4)]);
+  }
+  Serial.print(" ");
+  Serial.print(NAMEmembers[i]);
+  Serial.println("!");
+}
+void WriteToSDcard(int i, float b)
+{
+  String current = "";
+  current.concat("NAME : ");
+  current.concat(NAMEmembers[i]);
+  current.concat("    DATE: ");
+  current.concat(returnDate);
+  myFile = SD.open(current, FILE_WRITE);
+
   if (myFile)
   {
-    Serial.print("Writing to test.txt...");
-    myFile.println("testing 1, 2, 3.");
-    myFile.close();
-    Serial.println("done.");
-  }
-  else
-  {
-    Serial.println("error opening test.txt");
-  }
-  myFile = SD.open("test.txt");
-  if (myFile)
-  {
-    Serial.println("test.txt:");
-    while (myFile.available())
-    {
-      Serial.write(myFile.read());
-    }
+    myFile.println("DATE: ");
+    myFile.println(returnDate());
+    myFile.println("  TEMP: ");
+    myFile.println(b);
     myFile.close();
   }
-  else
-  {
-    Serial.println("error opening test.txt");
+}
+String returnDate()
+{
+  String Now = "";
+  DateTime now = RTC.now();
+  Now.concat("year:");
+  Now.concat(now.year());
+  Now.concat(" month:");
+  Now.concat(now.month());
+  Now.concat(" day:");
+  Now.concat(now.day());
+  Now.concat(" hour:");
+  Now.concat(now.hour());
+  Now.concat(" minute:");
+  Now.concat(now.minute());
+  Now.concat(" second:");
+  Now.concat(now.second());
+  return (Now);
+}
+String getPmOrAm()
+{
+  String NOW = "";
+  DateTime now = RTC.now();
+  if (now.hour() > 12)
+  { // if afternoon
+    NOW = "PM";
   }
+  if (now.hour() < 12)
+  {
+    NOW = "AM";
+  }
+  return (NOW);
 }

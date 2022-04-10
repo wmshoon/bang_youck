@@ -49,7 +49,7 @@ char *NAMEmembers[]{
     "alicebon",       // EC CB 43 2E
     "claraland",      // 03 6E E8 54
     "daniel",         // 73 3F E0 54
-    "henry8se",       // 63 A5 E0 54
+    "henry",          // 63 A5 E0 54
     "ich",            // E3 C4 E7 54
     "j",              // A3 60 C2 54
     "mail",           // 23 A9 DA 54
@@ -156,20 +156,20 @@ void tempcheak()
   return temp;
 }
 
-void hello(int a, int b) // a : name, b: am,pm 0 = am, 1, = pm
-{
-  Serial.print("hello ");
-  if (b == 0)
-  {
-    Serial.print(NAMEmembers[a]);
-    Serial.println("! good morning");
-  }
-  if (b == 1)
-  {
-    Serial.print(NAMEmembers[a]);
-    Serial.println("! good afternoon!");
-  }
-}
+// void hello(int a, int b) // a : name, b: am,pm 0 = am, 1, = pm
+// {
+//   Serial.print("hello ");
+//   if (b == 0)
+//   {
+//     Serial.print(NAMEmembers[a]);
+//     Serial.println("! good morning");
+//   }
+//   if (b == 1)
+//   {
+//     Serial.print(NAMEmembers[a]);
+//     Serial.println("! good afternoon!");
+//   }
+// }
 
 // void SendToRaspi(int a, int b, int c, )
 // { // namemembers, temp, time
