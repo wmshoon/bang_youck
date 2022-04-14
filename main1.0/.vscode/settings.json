@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.ino": "arduino-output",
+        "sd_rfid_clock": "c",
+        "adafruit_mlx90614.h": "c",
+        "mfrc522.h": "c"
+    }
+}
