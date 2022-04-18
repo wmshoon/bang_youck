@@ -3,6 +3,10 @@
         "*.ino": "arduino-output",
         "sd_rfid_clock": "c",
         "adafruit_mlx90614.h": "c",
-        "mfrc522.h": "c"
+        "mfrc522.h": "c",
+        "old code": "c",
+        "sd_example.ino": "c",
+        "SDcardtest.ino": "c",
+        "main1.0.ino": "c"
     }
 }

@@ -86,26 +86,26 @@ char *NAMEmembers[]{
     "youn",           // 7C 9C 1D 2C
     "yujin",          // 5C 32 12 2C
     "chris_p_bacon"}; // FC C8 38 2F ##========== 0 to 30 ==========#const PROGMEM char *hello_message_all[]{
-char *hello_message_all[]{
-    "yo! wasup",
-    "hello",
-    "hi",
-    "good to see you",
-    "glad to see you",
-    "welcome",
-    "welcome back",
-    "nice to see you"};
-char *hello_message_goodbye_late[]{
-    "see you later",
-    "good bye",
-    "i am working... and u are going",
-    "bye",
-    "have a good night"};
-char *hello_message_goodbye_early[]{
-    "see you later",
-    "good bye",
-    "i am working... and u are going",
-    "bye"};
+// char *hello_message_all[]{
+//     "yo! wasup",
+//     "hello",
+//     "hi",
+//     "good to see you",
+//     "glad to see you",
+//     "welcome",
+//     "welcome back",
+//     "nice to see you"};
+// char *hello_message_goodbye_late[]{
+//     "see you later",
+//     "good bye",
+//     "i am working... and u are going",
+//     "bye",
+//     "have a good night"};
+// char *hello_message_goodbye_early[]{
+// "see you later",
+// "good bye",
+// "i am working... and u are going",
+// "bye"};
 float current_temp;
 //---------------------------------------------------------------------------------------------------------------------------------------
 void setup()
@@ -148,13 +148,10 @@ void loop()
     current_uid.toUpperCase();
     for (int i = 0; i < 31; i++)
     {
-        if (current_uid == UIDmembers[i])
+        if (current_uid == UIDmembers[i]
         {
-            // if (!손이 감지되었는가) //여기부터 bullshit
-            // {
-            //     return;
-            // }
-            float current_temp = mlx.readObjectTempC();
+            while (!)
+                float current_temp = mlx.readObjectTempC();
             if (current_temp < 37.5)
             {
                 WriteToLCD(NAMEmembers[i]);
