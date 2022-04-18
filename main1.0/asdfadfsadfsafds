@@ -1,10 +1,10 @@
-
 #include <EEPROM.h>
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Adafruit_MLX90614.h>
+#include <WmsMembers.h>
 
-#define SS 20
+#define SS 10
 #define RST 9
 #define buzzerPin 5
 
@@ -111,80 +111,7 @@ void loop()
     {
       Serial.print(UIDmembers[i]);
       Serial.print("  ");
-      Serial.println(NAMEmembers[i]);
+      Serial.print(NAMEmembers[i]);
     }
   }
-}
-String WriteToLCD(String name)
-{
-  // TODO: 아래처럼 주석처리 하려면 기능이 작동하는지 시리얼모니터 출력이라도 진행.
-  Serial.println("hello " + name + "welcome here!");
-  // TODO: String함수면 문자열 출력해야되지 않음? void 아닌가?
-  // LCD.write("hello " + name + "welcome here!");
-  // LCD.clear();
-}
-void Beep()
-{
-  digitalWrite(buzzerPin, HIGH);
-  delay(10);
-  digitalWrite(buzzerPin, LOW);
-  delay(10);
-}
-
-void blinkLED()
-{
-  digitalWrite(buzzerPin, HIGH);
-  delay(10);
-  digitalWrite(buzzerPin, LOW);
-  delay(10);
-}
-
-void WriteToSDcard(String current_name, float temperature) // i equals number of members, b equals temp of object
-{
-  String current_info = "";
-  current_info.concat("NAME : ");
-  current_info.concat(current_name);
-  current_info.concat("    DATE: ");
-  current_info.concat(__DATE__);
-  // myFile = SD.open(current_info, FILE_WRITE);
-
-  // if (myFile)
-  // {
-  //     myFile.print("DATE: ");
-  //     myFile.print(returnDayAndHour());
-  //     myFile.print("  TEMP: ");
-  //     myFile.println(temperature);
-  //     myFile.close();
-  // }
-  Serial.println(current_info);
-}
-
-String returnDate() // return the date string for human.// EX)  year: 2022 month : 4 day : 13 hour : 21 minute : 12 second : 42
-{
-  String Now = "";
-  DateTime now = RTC.now();
-  Now.concat("year :");
-  Now.concat(now.year());
-  Now.concat(" month :");
-  Now.concat(now.month());
-  Now.concat(" day :");
-  Now.concat(now.day());
-  Now.concat(" hour :");
-  Now.concat(now.hour());
-  Now.concat(" minute :");
-  Now.concat(now.minute());
-  Now.concat(" second :");
-  Now.concat(now.second());
-  return (Now);
-}
-
-String returnDayAndHour()
-{
-  String Now = "";
-  DateTime now = RTC.now();
-  Now.concat("day :");
-  Now.concat(now.day());
-  Now.concat(" hour :");
-  Now.concat(now.hour());
-  return (Now);
 }
