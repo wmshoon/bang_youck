@@ -1,4 +1,3 @@
-
 #include <EEPROM.h>
 #include <SPI.h>
 #include <MFRC522.h>
@@ -115,13 +114,8 @@ void loop()
     }
   }
 }
-String WriteToLCD(String name)
+void WriteToLCD(String name)
 {
-  // TODO: 아래처럼 주석처리 하려면 기능이 작동하는지 시리얼모니터 출력이라도 진행.
-  Serial.println("hello " + name + "welcome here!");
-  // TODO: String함수면 문자열 출력해야되지 않음? void 아닌가?
-  // LCD.write("hello " + name + "welcome here!");
-  // LCD.clear();
 }
 void Beep()
 {
@@ -131,7 +125,7 @@ void Beep()
   delay(10);
 }
 
-void blinkLED()
+void BlinkLED()
 {
   digitalWrite(buzzerPin, HIGH);
   delay(10);
@@ -159,7 +153,7 @@ void WriteToSDcard(String current_name, float temperature) // i equals number of
   Serial.println(current_info);
 }
 
-String returnDate() // return the date string for human.// EX)  year: 2022 month : 4 day : 13 hour : 21 minute : 12 second : 42
+String ReturnDate() // return the date string for human.// EX)  year: 2022 month : 4 day : 13 hour : 21 minute : 12 second : 42
 {
   String Now = "";
   DateTime now = RTC.now();
@@ -178,7 +172,7 @@ String returnDate() // return the date string for human.// EX)  year: 2022 month
   return (Now);
 }
 
-String returnDayAndHour()
+String ReturnDayAndHour()
 {
   String Now = "";
   DateTime now = RTC.now();
